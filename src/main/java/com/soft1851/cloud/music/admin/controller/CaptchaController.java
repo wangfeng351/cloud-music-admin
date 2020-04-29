@@ -1,12 +1,10 @@
 package com.soft1851.cloud.music.admin.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.soft1851.cloud.music.admin.dto.SignDto;
 import com.soft1851.cloud.music.admin.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

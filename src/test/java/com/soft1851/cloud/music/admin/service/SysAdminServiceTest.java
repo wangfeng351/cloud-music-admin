@@ -1,13 +1,13 @@
 package com.soft1851.cloud.music.admin.service;
 
-import com.soft1851.cloud.music.admin.dto.SignDto;
+import com.soft1851.cloud.music.admin.domain.dto.SignDto;
+import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDateTime;
 
 /**
  * @Description TODO
@@ -30,7 +30,16 @@ class SysAdminServiceTest {
                 .password("123456")
                 .verifyCode("123456")
                 .build();
-        System.out.println(sysAdminService.getAdminRoleByAdminName("mqxu"));;
-
+//        System.out.println(sysAdminService.getAdminRoleByAdminName("mqxu"));;
+//
+        SysAdmin admin = SysAdmin.builder().id("test")
+                        .avatar("1231")
+                        .password("fsdfasd")
+                        .name("hello")
+                        .salt("22312")
+                        .createTime(LocalDateTime.now())
+                        .updateTime(LocalDateTime.now())
+                        .build();
+        sysAdminService.save(admin);
     }
 }

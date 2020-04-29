@@ -1,4 +1,4 @@
-package com.soft1851.cloud.music.admin.entity;
+package com.soft1851.cloud.music.admin.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -21,52 +21,28 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("video")
-public class Video extends Model<Video> {
+@TableName("user_song_list")
+public class UserSongList extends Model<UserSongList> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 视频id
+     * 用户歌单id
      */
-    @TableId("video_id")
-    private String videoId;
+    @TableId("id")
+    private String id;
 
     /**
-     * 视频名称
+     * 歌单id
      */
-    @TableField("video_name")
-    private String videoName;
+    @TableField("song_list_id")
+    private String songListId;
 
     /**
-     * 视频时长
+     * 用户id
      */
-    @TableField("duration")
-    private String duration;
-
-    /**
-     * 视频封面
-     */
-    @TableField("thumbnail")
-    private String thumbnail;
-
-    /**
-     * 评论数量
-     */
-    @TableField("comment_count")
-    private Integer commentCount;
-
-    /**
-     * 点赞数量
-     */
-    @TableField("like_count")
-    private Integer likeCount;
-
-    /**
-     * 播放数量
-     */
-    @TableField("play_count")
-    private Integer playCount;
+    @TableField("user_id")
+    private String userId;
 
     /**
      * 创建时间
@@ -83,7 +59,7 @@ public class Video extends Model<Video> {
 
     @Override
     protected Serializable pkVal() {
-        return this.videoId;
+        return this.id;
     }
 
 }

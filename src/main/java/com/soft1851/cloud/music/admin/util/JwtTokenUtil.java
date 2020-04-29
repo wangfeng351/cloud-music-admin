@@ -25,21 +25,21 @@ public class JwtTokenUtil {
      * 加密
      *
      * @param userId
-     * @param userRole
+     * @param roles
      * @param expiresAt
      * @return String
      */
-    public static String getToken(final String userId, final String userRole, Date expiresAt) {
+    public static String getToken(final String userId, final String roles, final String secret, Date expiresAt) {
         String token = null;
         try {
-            log.info("传过来的role:" + userRole);
+            log.info("传过来的role:" + roles);
             token = JWT.create()
                     .withIssuer("auth0")
                     .withClaim("userId", userId)
-                    .withClaim("roles", userRole)
+                    .withClaim("roles", roles)
                     .withExpiresAt(expiresAt)
                     // 使用了HMAC256加密算法, mySecret是用来加密数字签名的密钥
-                    .sign(Algorithm.HMAC256("mySecret"));
+                    .sign(Algorithm.HMAC256(secret));
         } catch (UnsupportedEncodingException e) {
             log.error("不支持的编码格式");
         }
@@ -53,11 +53,11 @@ public class JwtTokenUtil {
      * @param token
      * @return DecodedJWT
      */
-    public static DecodedJWT deToken(final String token) {
+    public static DecodedJWT deToken(final String token,final String secret) {
         DecodedJWT jwt;
         JWTVerifier verifier = null;
         try {
-            verifier = JWT.require(Algorithm.HMAC256("mySecret"))
+            verifier = JWT.require(Algorithm.HMAC256(secret))
                     .withIssuer("auth0")
                     .build();
         } catch (UnsupportedEncodingException e) {
@@ -74,8 +74,8 @@ public class JwtTokenUtil {
      * @param token
      * @return String
      */
-    public static String getUserId(String token) {
-        String userId = deToken(token).getClaim("userId").asString();
+    public static String getUserId(String token, final String secret) {
+        String userId = deToken(token, secret).getClaim("roles").asString();
         if(userId != null){
             return userId;
         }
@@ -88,8 +88,8 @@ public class JwtTokenUtil {
      * @param token
      * @return String
      */
-    public static String getUserRole(String token) {
-        return deToken(token).getClaim("roles").asString();
+    public static String getUserRole(String token, final String secret) {
+        return deToken(token, secret).getClaim("roles").asString();
     }
 
     /**
@@ -98,8 +98,8 @@ public class JwtTokenUtil {
      * @param token
      * @return boolean
      */
-    public static boolean isExpiration(String token) {
-        return deToken(token).getExpiresAt().before(new Date());
+    public static boolean isExpiration(String token, final String secret) {
+        return deToken(token, secret).getExpiresAt().before(new Date());
     }
 
     public static void main(String[] args) {

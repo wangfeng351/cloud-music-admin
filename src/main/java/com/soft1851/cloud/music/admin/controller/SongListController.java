@@ -1,10 +1,7 @@
 package com.soft1851.cloud.music.admin.controller;
 
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.soft1851.cloud.music.admin.entity.SongList;
+import com.soft1851.cloud.music.admin.domain.entity.SongList;
 import com.soft1851.cloud.music.admin.service.SongListService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.GetMapping;

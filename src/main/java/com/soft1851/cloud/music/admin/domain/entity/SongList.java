@@ -1,6 +1,5 @@
-package com.soft1851.cloud.music.admin.entity;
+package com.soft1851.cloud.music.admin.domain.entity;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;

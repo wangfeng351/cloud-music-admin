@@ -1,9 +1,8 @@
 package com.soft1851.cloud.music.admin.service;
 
-import com.soft1851.cloud.music.admin.entity.RoleMenu;
+import com.soft1851.cloud.music.admin.domain.entity.RoleMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
 
-import java.util.List;
 import java.util.Map;
 
 /**

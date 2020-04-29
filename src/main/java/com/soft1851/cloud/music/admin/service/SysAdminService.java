@@ -1,7 +1,7 @@
 package com.soft1851.cloud.music.admin.service;
 
-import com.soft1851.cloud.music.admin.dto.SignDto;
-import com.soft1851.cloud.music.admin.entity.SysAdmin;
+import com.soft1851.cloud.music.admin.domain.dto.SignDto;
+import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -37,4 +37,27 @@ public interface SysAdminService extends IService<SysAdmin> {
      * @return
      */
     List<Map<String, Object>> getAdminRoleByAdminName(String name);
+
+    /**
+     * 修改个人资料
+     * @param admin
+     */
+    void updateInfo(SysAdmin admin);
+
+    /**
+     * 单个新增用户
+     * @param admin
+     */
+    void insertSingle(SysAdmin admin);
+
+    /**
+     * 批量删除
+     */
+    void batchDelete(String id);
+
+    /**
+     * 查询所有用户
+     * @return
+     */
+    Map<String, Object> selectAll();
 }

@@ -1,4 +1,4 @@
-package com.soft1851.cloud.music.admin.entity;
+package com.soft1851.cloud.music.admin.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -21,28 +21,34 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("user_song_list")
-public class UserSongList extends Model<UserSongList> {
+@TableName("video_comment")
+public class VideoComment extends Model<VideoComment> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户歌单id
+     * id
      */
     @TableId("id")
     private String id;
 
     /**
-     * 歌单id
+     * 视频id
      */
-    @TableField("song_list_id")
-    private String songListId;
+    @TableField("video_id")
+    private String videoId;
 
     /**
-     * 用户id
+     * 评论id
      */
-    @TableField("user_id")
-    private String userId;
+    @TableField("comment_id")
+    private String commentId;
+
+    /**
+     * 评论内容
+     */
+    @TableField("comment_contetn")
+    private String commentContetn;
 
     /**
      * 创建时间

@@ -1,6 +1,6 @@
 package com.soft1851.cloud.music.admin.service;
 
-import com.soft1851.cloud.music.admin.entity.Song;
+import com.soft1851.cloud.music.admin.domain.entity.Song;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -38,4 +38,21 @@ public interface SongService extends IService<Song> {
      * @param songs
      */
     void batchInsert(List<Song> songs);
+
+    /**
+     * 批量删除
+     * @param idList
+     */
+    void batchDelete(String idList);
+
+    /**
+     * 单个删除
+     * @param id
+     */
+    void delete(String id);
+
+    /**
+     * 导出歌曲数据
+     */
+    void exportData();
 }

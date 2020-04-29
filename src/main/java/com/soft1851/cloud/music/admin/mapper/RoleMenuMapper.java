@@ -1,6 +1,6 @@
 package com.soft1851.cloud.music.admin.mapper;
 
-import com.soft1851.cloud.music.admin.entity.RoleMenu;
+import com.soft1851.cloud.music.admin.domain.entity.RoleMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;

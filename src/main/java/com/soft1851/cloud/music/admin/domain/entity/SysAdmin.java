@@ -1,13 +1,16 @@
-package com.soft1851.cloud.music.admin.entity;
+package com.soft1851.cloud.music.admin.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -19,36 +22,47 @@ import lombok.experimental.Accessors;
  * @since 2020-04-21
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("song_comment")
-public class SongComment extends Model<SongComment> {
+@TableName("sys_admin")
+@AllArgsConstructor
+@NoArgsConstructor
+public class SysAdmin extends Model<SysAdmin> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * id
+     * 主键
      */
-    @TableId("id")
+    @JsonIgnore
+    @TableId(value = "id", type = IdType.INPUT)
     private String id;
 
     /**
-     * 歌曲id
+     * 用户名
      */
-    @TableField("song_id")
-    private String songId;
+    @TableField("name")
+    private String name;
 
     /**
-     * userid
+     * 密码
      */
-    @TableField("user_id")
-    private String userId;
+    @TableField("password")
+    private String password;
 
     /**
-     * 评论内容
+     * 加密盐
      */
-    @TableField("comment_content")
-    private String commentContent;
+    @JsonIgnore
+    @TableField("salt")
+    private String salt;
+
+    /**
+     * 头像
+     */
+    @TableField("avatar")
+    private String avatar;
 
     /**
      * 创建时间
@@ -59,27 +73,15 @@ public class SongComment extends Model<SongComment> {
     /**
      * 更新时间
      */
+    @JsonIgnore
     @TableField("update_time")
     private LocalDateTime updateTime;
 
     /**
-     * 歌单id
+     * 账户状态：0 禁用 1 启用
      */
-    @TableField("song_list_id")
-    private String songListId;
-
-    /**
-     * 视频id
-     */
-    @TableField("vido_id")
-    private String vidoId;
-
-    /**
-     * 点赞量
-     */
-    @TableField("like_counts")
-    private Integer likeCounts;
-
+    @TableField("status")
+    private Integer status;
 
     @Override
     protected Serializable pkVal() {

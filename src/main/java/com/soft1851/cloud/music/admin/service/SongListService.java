@@ -1,8 +1,7 @@
 package com.soft1851.cloud.music.admin.service;
 
-import com.soft1851.cloud.music.admin.entity.SongList;
+import com.soft1851.cloud.music.admin.domain.entity.SongList;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;

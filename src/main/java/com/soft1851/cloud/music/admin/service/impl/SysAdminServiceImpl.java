@@ -2,14 +2,15 @@ package com.soft1851.cloud.music.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.soft1851.cloud.music.admin.common.ResultCode;
-import com.soft1851.cloud.music.admin.dto.SignDto;
-import com.soft1851.cloud.music.admin.entity.RoleAdmin;
-import com.soft1851.cloud.music.admin.entity.SysAdmin;
-import com.soft1851.cloud.music.admin.entity.SysRole;
+import com.soft1851.cloud.music.admin.domain.dto.SignDto;
+import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
+import com.soft1851.cloud.music.admin.domain.entity.SysRole;
 import com.soft1851.cloud.music.admin.exception.CustomException;
-import com.soft1851.cloud.music.admin.mapper.RoleAdminMapper;
 import com.soft1851.cloud.music.admin.mapper.SysAdminMapper;
+import com.soft1851.cloud.music.admin.mapper.SysRoleMapper;
+import com.soft1851.cloud.music.admin.service.RedisService;
 import com.soft1851.cloud.music.admin.service.SysAdminService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.soft1851.cloud.music.admin.util.JwtTokenUtil;
@@ -33,6 +34,10 @@ import java.util.*;
 public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> implements SysAdminService {
     @Resource
     private SysAdminMapper sysAdminMapper;
+    @Resource
+    private SysRoleMapper sysRoleMapper;
+    @Resource
+    private RedisService redisService;
 
     @Override
     public Map<String, Object> sign(SignDto signDto) {
@@ -45,7 +50,7 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
         adminMap.put("avatar", admin.getAvatar());
         List<Map<String, Object>> maps = getAdminRoleByAdminName(signDto.getName());
         List<SysRole> roles = new ArrayList<>();
-        //构建role角色（很笨的方法，先这样）
+        //构建role角色
         for (Map<String, Object> map : maps) {
             SysRole sysRole = SysRole.builder()
                     .roleId(Integer.parseInt(map.get("role_id").toString()))
@@ -53,10 +58,14 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
                     .build();
             roles.add(sysRole);
         }
+        //将私钥存入redis
+        redisService.set(admin.getId(), admin.getSalt());
         String password = Md5Util.getMd5(signDto.getPassword(), true, 32);
         log.info("角色字符串位：" + JSONObject.toJSONString(roles));
         //对token序列化成字符串
-        String token = JwtTokenUtil.getToken( admin.getId(), JSONObject.toJSONString(roles), new Date(System.currentTimeMillis() + 6000L * 1000));
+
+        String token = JwtTokenUtil.getToken( admin.getId(), JSONObject.toJSONString(roles),admin.getSalt(), new Date(System.currentTimeMillis() + 6000L * 1000));
+        log.info("" + String.valueOf(roles));
         if (admin.getPassword().equals(password)) {
             data.put("user", adminMap);
             data.put("roles", roles);
@@ -84,5 +93,51 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
             return maps;
         }
         throw new CustomException("用户角色查询异常", ResultCode.DATABASE_ERROR);
+    }
+
+    @Override
+    public void updateInfo(SysAdmin admin) {
+        UpdateWrapper<SysAdmin> wrapper = new UpdateWrapper<>();
+        wrapper.set("name", admin.getName())
+                .set("avatar", admin.getAvatar())
+                .set("status", admin.getStatus());
+        try {
+            sysAdminMapper.update(admin, wrapper);
+        } catch (Exception e) {
+            throw new CustomException("个人信息修改异常", ResultCode.DATABASE_ERROR);
+        }
+    }
+
+    @Override
+    public void insertSingle(SysAdmin admin) {
+        try {
+            sysAdminMapper.insert(admin);
+        } catch (Exception e) {
+            throw new CustomException("用户新增异常", ResultCode.DATABASE_ERROR);
+        }
+    }
+
+    @Override
+    public void batchDelete(String id) {
+        String[] strings = id.split(",");
+        List<String> idList = Arrays.asList(strings);
+        try {
+            sysAdminMapper.deleteBatchIds(idList);
+        } catch (Exception e) {
+            throw new CustomException("用户批量删除异常", ResultCode.DATABASE_ERROR);
+        }
+    }
+
+    @Override
+    public Map<String, Object> selectAll() {
+        List<SysRole> roles = sysRoleMapper.selectList(new QueryWrapper<>());
+        List<Map<String, Object>> maps = sysAdminMapper.selectAll();
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("admin", maps);
+        map.put("roles", roles);
+        if(maps != null){
+            return map;
+        }
+        throw new CustomException("未查到用户信息", ResultCode.DATA_IS_WRONG);
     }
 }

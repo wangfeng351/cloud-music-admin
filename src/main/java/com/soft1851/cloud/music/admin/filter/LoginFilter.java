@@ -29,7 +29,8 @@ public class LoginFilter implements Filter{
         ServletRequest requestWrapper = null;
         if (servletRequest instanceof HttpServletRequest) {
            String url = ((HttpServletRequest) servletRequest).getRequestURI();
-           if("/resources/guide".equals(url)){
+           //判断接口是否位导入接
+           if("/resources/upload".equals(url)){
                Part file = ((HttpServletRequest) servletRequest).getPart("file");
                log.info("文件名:" + file);
            }

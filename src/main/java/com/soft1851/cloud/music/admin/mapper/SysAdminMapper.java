@@ -1,6 +1,6 @@
 package com.soft1851.cloud.music.admin.mapper;
 
-import com.soft1851.cloud.music.admin.entity.SysAdmin;
+import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
@@ -22,4 +22,10 @@ public interface SysAdminMapper extends BaseMapper<SysAdmin> {
      * @return
      */
     List<Map<String, Object>> getAdminRoleByAdminName(String name);
+
+    /**
+     * 获取所有用户信息
+     * @return
+     */
+    List<Map<String, Object>> selectAll();
 }

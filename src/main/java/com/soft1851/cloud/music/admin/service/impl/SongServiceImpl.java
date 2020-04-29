@@ -1,17 +1,32 @@
 package com.soft1851.cloud.music.admin.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.soft1851.cloud.music.admin.dto.TimeDto;
-import com.soft1851.cloud.music.admin.entity.Song;
+import com.soft1851.cloud.music.admin.common.ResultCode;
+import com.soft1851.cloud.music.admin.domain.dto.TimeDto;
+import com.soft1851.cloud.music.admin.domain.entity.Song;
+import com.soft1851.cloud.music.admin.exception.CustomException;
 import com.soft1851.cloud.music.admin.mapper.SongMapper;
 import com.soft1851.cloud.music.admin.service.SongService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.poi.ss.formula.functions.T;
+import com.soft1851.cloud.music.admin.util.ExcelConsumer;
+import com.soft1851.cloud.music.admin.util.ExportDataAdapter;
+import com.soft1851.cloud.music.admin.util.ThreadPool;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * <p>
@@ -22,6 +37,8 @@ import java.util.List;
  * @since 2020-04-21
  */
 @Service
+@Transactional(rollbackFor = RuntimeException.class)
+@Slf4j
 public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements SongService {
     @Resource
     private SongMapper songMapper;
@@ -67,6 +84,69 @@ public class SongServiceImpl extends ServiceImpl<SongMapper, Song> implements So
 
     @Override
     public void batchInsert(List<Song> songs) {
+    }
 
+    @Override
+    public void batchDelete(String id) {
+        String[] ids = id.split(",");
+        List<String> idList = Arrays.asList(ids);
+        try {
+            songMapper.deleteBatchIds(idList);
+        }catch (Exception e){
+            throw new CustomException("歌曲批量删除异常", ResultCode.DATABASE_ERROR);
+        }
+    }
+
+    @Override
+    public void delete(String id) {
+        QueryWrapper<Song> wrapper = new QueryWrapper<>();
+        wrapper.eq("song_id", id);
+        try {
+            songMapper.delete(wrapper);
+        } catch (Exception e) {
+            throw new CustomException("歌曲删除异常", ResultCode.DATABASE_ERROR);
+        }
+    }
+
+    @Override
+    @SneakyThrows
+    public void exportData(){
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        assert attributes != null;
+        HttpServletResponse response = attributes.getResponse();
+        assert response != null;
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition","attachment");
+        //导出excel对象
+        SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook(1000);
+        //数据缓冲
+        ExportDataAdapter<Song> exportDataAdapter = new ExportDataAdapter<>();
+        //线程同步对象
+        CountDownLatch latch = new CountDownLatch(2);
+        //启动线程获取数据(生产者)
+        ThreadPool.getExecutor().submit(() -> produceExportData(exportDataAdapter, latch));
+        //启动线程导出数据（消费者）
+        ThreadPool.getExecutor().submit(() -> new ExcelConsumer<>(Song.class, exportDataAdapter, sxssfWorkbook, latch, "歌曲数据").run());
+        latch.await();
+        //使用字节流写数据
+        OutputStream outputStream = null;
+        outputStream = response.getOutputStream();
+        sxssfWorkbook.write(outputStream);
+        outputStream.flush();
+        outputStream.close();
+    }
+
+    /**
+     * 生产者生产数据
+     *
+     * @param exportDataAdapter
+     * @param latch
+     */
+    private void produceExportData(ExportDataAdapter<Song> exportDataAdapter, CountDownLatch latch) {
+        List<Song> songs = songMapper.selectList(null);
+        songs.forEach(exportDataAdapter::addData);
+        log.info("数据生产完成");
+        //数据生产结束
+        latch.countDown();
     }
 }
