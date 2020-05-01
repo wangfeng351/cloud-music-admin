@@ -13,6 +13,11 @@ import com.soft1851.cloud.music.admin.annotation.ExcelVoAttribute;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * <p>
  * 
@@ -43,6 +48,7 @@ public class Song extends Model<Song> {
      * 歌曲名称
      */
     @ExcelVoAttribute(name = "歌曲名称", column = 1)
+    @NotBlank(message = "歌曲名称不可以为空")
     @TableField("song_name")
     private String songName;
 
@@ -57,6 +63,7 @@ public class Song extends Model<Song> {
      * 歌手
      */
     @ExcelVoAttribute(name = "歌手", column = 2)
+    @NotBlank(message = "歌手字段不可为空串")
     @TableField("singer")
     private String singer;
 
@@ -65,6 +72,7 @@ public class Song extends Model<Song> {
      */
     @ExcelVoAttribute(name = "时长", column = 5)
     @TableField("duration")
+    @NotBlank(message = "时长不可为空")
     private String duration;
 
     /**
@@ -80,6 +88,7 @@ public class Song extends Model<Song> {
      */
     @ExcelVoAttribute(name = "歌曲地址", column = 4)
     @TableField("url")
+    @NotBlank(message = "歌曲地址不可为空串")
     private String url;
 
     /**
@@ -87,12 +96,14 @@ public class Song extends Model<Song> {
      */
     @ExcelVoAttribute(name = "歌词", column = 6)
     @TableField("lyric")
+    @NotNull(message = "歌词不可为空")
     private String lyric;
 
     /**
      * 评论量
      */
     @ExcelVoAttribute(name = "评论量", column = 7)
+    @Min(0)
     @JsonIgnore
     @TableField("comment_count")
     private Integer commentCount;
@@ -102,6 +113,7 @@ public class Song extends Model<Song> {
      */
     @ExcelVoAttribute(name = "收藏量", column = 8)
     @JsonIgnore
+    @Min(0)
     @TableField("like_count")
     private Integer likeCount;
 
@@ -109,6 +121,7 @@ public class Song extends Model<Song> {
      * 播放量
      */
     @JsonIgnore
+    @Min(0)
     @TableField("play_count")
     private Integer playCount;
 
@@ -117,6 +130,7 @@ public class Song extends Model<Song> {
      */
     @JsonIgnore
     @TableField("delete_flag")
+    @Size(max = 2)
     private String deleteFlag;
 
     /**
@@ -124,12 +138,14 @@ public class Song extends Model<Song> {
      */
     @JsonIgnore
     @TableField("update_time")
+    @NotBlank(message = "时间不可为空串")
     private LocalDateTime updateTime;
 
     /**
      * 创建时间
      */
     @ExcelVoAttribute(name = "创建时间", column = 9)
+    @NotBlank(message = "时间不可为空串")
     @TableField("create_time")
     private LocalDateTime createTime;
 

@@ -7,9 +7,12 @@ import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
 import com.soft1851.cloud.music.admin.service.SysAdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 /**
@@ -23,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sysAdmin")
 @Slf4j
+@Validated
 public class SysAdminController {
     @Resource
     private SysAdminService sysAdminService;
@@ -39,29 +43,36 @@ public class SysAdminController {
     }
 
     @GetMapping("/menu")
-    public ResponseResult getAdminRoleByAdminName(@Param("name") String name) {
+    public ResponseResult getAdminRoleByAdminName(@Valid @Param("name") @NotBlank(message = "参数不能为空") String name) {
         return ResponseResult.success(sysAdminService.getAdminRoleByAdminName(name));
     }
 
     @GetMapping("/info")
-    public SysAdmin getInfoByName(@Param("name") String name) {
+    public SysAdmin getInfoByName(@Valid @Param("name") @NotBlank(message = "参数不能为空") String name) {
         return sysAdminService.getAdminByName(name);
     }
 
     @PutMapping("/info")
-    public ResponseResult updateInfo(@RequestBody SysAdmin sysAdmin) {
+    public ResponseResult updateInfo(@RequestBody @Valid SysAdmin sysAdmin) {
         sysAdminService.updateInfo(sysAdmin);
         return ResponseResult.success();
     }
 
+    @PutMapping("/single")
+    public ResponseResult updatePassword(@RequestBody @Valid SysAdmin admin) {
+        log.info(String.valueOf(admin));
+        sysAdminService.updatePassword(admin);
+        return ResponseResult.success();
+    }
+
     @PostMapping("/single")
-    public ResponseResult insertInfo(@RequestBody SysAdmin sysAdmin) {
+    public ResponseResult insertInfo(@RequestBody @Valid SysAdmin sysAdmin) {
         sysAdminService.insertSingle(sysAdmin);
         return ResponseResult.success();
     }
 
     @DeleteMapping("/many")
-    public ResponseResult batchDelete(@Param("adminId") String adminId) {
+    public ResponseResult batchDelete(@Valid @Param("adminId") @NotBlank(message = "参数不能为空") String adminId) {
         sysAdminService.batchDelete(adminId);
         return ResponseResult.success();
     }

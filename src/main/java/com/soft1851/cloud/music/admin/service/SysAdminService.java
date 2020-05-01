@@ -45,6 +45,12 @@ public interface SysAdminService extends IService<SysAdmin> {
     void updateInfo(SysAdmin admin);
 
     /**
+     * 修改密码
+     * @param admin
+     */
+    void updatePassword(SysAdmin admin);
+
+    /**
      * 单个新增用户
      * @param admin
      */

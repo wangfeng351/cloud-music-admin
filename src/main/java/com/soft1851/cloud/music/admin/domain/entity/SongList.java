@@ -12,6 +12,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * <p>
  * 
@@ -38,6 +43,7 @@ public class SongList extends Model<SongList> {
      * 歌单名称
      */
     @TableField("song_list_name")
+    @NotNull(message = "歌单名不允许为空")
     private String songListName;
 
     /**
@@ -56,12 +62,14 @@ public class SongList extends Model<SongList> {
      * 歌曲数
      */
     @TableField("song_count")
+    @Min(0)
     private Integer songCount;
 
     /**
      * 收藏数
      */
     @TableField("like_count")
+    @Min(0)
     private Integer likeCount;
 
     /**
@@ -69,13 +77,15 @@ public class SongList extends Model<SongList> {
      */
     @JsonIgnore
     @TableField("comment_count")
+    @Min(0)
     private Integer commentCount;
 
     /**
-     * 删除标志
+     * 删除标志 0 逻辑删  1 存在
      */
     @JsonIgnore
     @TableField("delete_flag")
+    @Max(1)
     private Integer deleteFlag;
 
     /**
@@ -83,18 +93,21 @@ public class SongList extends Model<SongList> {
      */
     @JsonIgnore
     @TableField("update_time")
+    @NotBlank(message = "时间不能为空")
     private LocalDateTime updateTime;
 
     /**
      * 创建时间
      */
     @TableField("create_time")
+    @NotBlank(message = "时间不能为空")
     private LocalDateTime createTime;
 
     /**
      * 播放量
      */
     @TableField("plays_counts")
+    @Min(0)
     private Integer playsCounts;
 
 

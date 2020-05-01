@@ -10,6 +10,10 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.apache.xmlbeans.impl.jam.mutable.MElement;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * <p>
@@ -40,12 +44,14 @@ public class SysRole extends Model<SysRole> {
      * 角色名称
      */
     @TableField("role_name")
+    @NotBlank(message = "角色名称不允许为空串")
     private String roleName;
 
     /**
      * 角色描述
      */
     @TableField("descriiption")
+    @NotBlank(message = "描述字段不允许为空")
     @JsonIgnore
     private String descriiption;
 

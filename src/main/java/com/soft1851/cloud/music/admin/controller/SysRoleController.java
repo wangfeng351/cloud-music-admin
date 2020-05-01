@@ -7,9 +7,12 @@ import com.soft1851.cloud.music.admin.service.RoleAdminService;
 import com.soft1851.cloud.music.admin.service.SysRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +27,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/sysRole")
 @Slf4j
+@Validated
 public class SysRoleController {
-    @Resource
-    private RoleAdminService roleAdminService;
     @Resource
     private SysRoleService sysRoleService;
 
@@ -47,7 +49,7 @@ public class SysRoleController {
     }
 
     @DeleteMapping(value = "/single/{roleId}")
-    public ResponseResult deleteSingle(@PathVariable int roleId) {
+    public ResponseResult deleteSingle(@Valid @PathVariable @NotBlank(message = "参数不能为空") int roleId) {
         sysRoleService.deleteSingle(roleId);
         return ResponseResult.success();
     }

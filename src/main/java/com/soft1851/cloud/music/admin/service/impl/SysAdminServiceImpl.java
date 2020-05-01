@@ -48,6 +48,7 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
         adminMap.put("userId", admin.getId());
         adminMap.put("name", admin.getName());
         adminMap.put("avatar", admin.getAvatar());
+        adminMap.put("password", admin.getPassword());
         List<Map<String, Object>> maps = getAdminRoleByAdminName(signDto.getName());
         List<SysRole> roles = new ArrayList<>();
         //构建role角色
@@ -100,11 +101,25 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
         UpdateWrapper<SysAdmin> wrapper = new UpdateWrapper<>();
         wrapper.set("name", admin.getName())
                 .set("avatar", admin.getAvatar())
-                .set("status", admin.getStatus());
+                .set("status", admin.getStatus())
+                .eq("id", admin.getId());
         try {
             sysAdminMapper.update(admin, wrapper);
         } catch (Exception e) {
             throw new CustomException("个人信息修改异常", ResultCode.DATABASE_ERROR);
+        }
+    }
+
+    @Override
+    public void updatePassword(SysAdmin admin) {
+        UpdateWrapper<SysAdmin> wrapper = new UpdateWrapper<>();
+        wrapper.set("name", admin.getName())
+                .eq("id", admin.getId())
+                .set("password", Md5Util.getMd5(admin.getPassword(), true, 32));
+        try {
+            sysAdminMapper.update(admin, wrapper);
+        } catch (Exception e) {
+            log.info("修改密码异常");
         }
     }
 

@@ -6,11 +6,19 @@ import com.soft1851.cloud.music.admin.common.ResultCode;
 import com.soft1851.cloud.music.admin.exception.CustomException;
 import com.soft1851.cloud.music.admin.exception.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description TODO
@@ -74,4 +82,29 @@ public class GlobalExceptionHandler {
         return ResponseResult.failure(ResultCode.RESULT_CODE_DATA_NONE);
     }
 
+    /**
+     * 参数校验异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseResult handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) ->{
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return ResponseResult.failure(ResultCode.PARAMETER_ERROR, errors.toString());
+    }
+
+    /**
+     * 参数校验处理返回400
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    ResponseResult handleConstraintViolationException(ConstraintViolationException e) {
+        return ResponseResult.failure(ResultCode.PARAMETER_ERROR, e.getMessage());
+    }
 }

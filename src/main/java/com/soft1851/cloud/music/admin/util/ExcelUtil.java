@@ -180,6 +180,7 @@ public class ExcelUtil<T> {
      * @return
      */
     private List<Field> getSortFields() {
+        //获取实体类中的字段并根据注解的column属性进行排序
         List<Field> fields = Arrays.stream(clazz.getDeclaredFields()).filter(x -> x.isAnnotationPresent(ExcelVoAttribute.class)).collect(Collectors.toList());
         List<Field> sortList = new ArrayList<>(fields);
         //排序

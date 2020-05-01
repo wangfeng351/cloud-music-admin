@@ -104,7 +104,6 @@ public class ExcelConsumer<T> implements Runnable {
                 }
             }
         }
-        log.info("数据导出完成");
         latch.countDown();
     }
 }

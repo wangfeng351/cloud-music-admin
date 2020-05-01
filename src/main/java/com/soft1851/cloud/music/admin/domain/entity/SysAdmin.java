@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.*;
+
 /**
  * <p>
  * 
@@ -35,7 +37,6 @@ public class SysAdmin extends Model<SysAdmin> {
     /**
      * 主键
      */
-    @JsonIgnore
     @TableId(value = "id", type = IdType.INPUT)
     private String id;
 
@@ -43,12 +44,14 @@ public class SysAdmin extends Model<SysAdmin> {
      * 用户名
      */
     @TableField("name")
+    @NotBlank(message = "用户名不可为空串")
     private String name;
 
     /**
      * 密码
      */
     @TableField("password")
+    @Size(min = 6, message = "密码最少不可低于六位数")
     private String password;
 
     /**
@@ -73,7 +76,6 @@ public class SysAdmin extends Model<SysAdmin> {
     /**
      * 更新时间
      */
-    @JsonIgnore
     @TableField("update_time")
     private LocalDateTime updateTime;
 
@@ -81,6 +83,7 @@ public class SysAdmin extends Model<SysAdmin> {
      * 账户状态：0 禁用 1 启用
      */
     @TableField("status")
+    @Max(1)
     private Integer status;
 
     @Override

@@ -11,6 +11,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * <p>
  * 
@@ -37,6 +41,7 @@ public class SysMenu extends Model<SysMenu> {
      * 父级资源id，目录的parent_id为0
      */
     @TableField("parent_id")
+    @NotNull(message = "父类id不允许为空")
     private Integer parentId;
 
     /**
@@ -49,6 +54,7 @@ public class SysMenu extends Model<SysMenu> {
      * 资源名称
      */
     @TableField("title")
+    @NotBlank(message = "资源名称不允许为空串")
     private String title;
 
     /**
@@ -67,6 +73,7 @@ public class SysMenu extends Model<SysMenu> {
      * 排序号
      */
     @TableField("sort")
+    @Min(1)
     private Integer sort;
 
 
