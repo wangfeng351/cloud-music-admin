@@ -1,13 +1,14 @@
 package com.soft1851.cloud.music.admin.filter;
 
 import com.soft1851.cloud.music.admin.handler.RequestWrapper;
+import com.soft1851.cloud.music.admin.util.HttpHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
+import javax.servlet.http.*;
 import java.io.IOException;
+import java.io.Reader;
 
 /**
  * @Description TODO
@@ -35,13 +36,31 @@ public class LoginFilter implements Filter{
                log.info("文件名:" + file);
            }
             requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
-//            log.info(requestWrapper("file"));
+        //log.info(requestWrapper("file"));
         }
         if (requestWrapper == null) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             filterChain.doFilter(requestWrapper, servletResponse);
         }
+        /*log.info("执行过滤器");
+        if (servletRequest instanceof HttpServletRequest) {
+            log.info("有http请求进入过滤器");
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            String header = request.getHeader("Content-Type");
+            if (header != null) {
+                log.info(header);
+                if (header.startsWith("multipart/form-data")) {
+                    log.info("有文件上传请求");
+                    Part file = request.getPart("file");
+                    log.info("文件名：" + file.getName());
+                }else {
+                    String name = request.getHeader("Verify");
+                    log.info(name);
+                }
+            }
+        }
+        filterChain.doFilter(servletRequest, servletResponse);*/
     }
 
     @Override

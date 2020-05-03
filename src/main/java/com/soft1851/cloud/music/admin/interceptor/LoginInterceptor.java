@@ -5,6 +5,7 @@ import com.soft1851.cloud.music.admin.common.ResultCode;
 import com.soft1851.cloud.music.admin.exception.CustomException;
 import com.soft1851.cloud.music.admin.handler.RequestWrapper;
 import com.soft1851.cloud.music.admin.service.RedisService;
+import com.soft1851.cloud.music.admin.util.HttpHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @Description TODO
@@ -37,16 +39,22 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        //将request包装成HttpServletRequestWrapper类型
+       /* //将request包装成HttpServletRequestWrapper类型
         RequestWrapper requestWrapper = new RequestWrapper(request);
         //取得请求的json对象
-        String body = requestWrapper.getBody();
+        String body = requestWrapper.getBody();*/
+       String body = null;
+        try {
+            body = HttpHelper.getBodyString(request);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         //从redis取得指定用户名的验证码
         JSONObject jsonObject = JSONObject.parseObject(body);
         //判断以用户名作为key的数据是否还存在
         String name = jsonObject.getString("name");
         String verifyCode = jsonObject.getString("verifyCode");
-        String verify = requestWrapper.getHeader("Verify");
+        String verify = request.getHeader("Verify");
         //判断是否有token
         // 否则判断验证码
         if (redisService.existsKey(verify)) {
