@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soft1851.cloud.music.admin.mapper.TSoftMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.soft1851.cloud.music.admin.domain.entity.TSoft">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="github_name" property="githubName" />
+        <result column="nickname" property="nickname" />
+        <result column="hometown" property="hometown" />
+        <result column="birthday" property="birthday" />
+        <result column="constellation" property="constellation" />
+        <result column="mobile" property="mobile" />
+        <result column="qq" property="qq" />
+        <result column="email" property="email" />
+        <result column="avatar" property="avatar" />
+        <result column="github_url" property="githubUrl" />
+        <result column="hobby" property="hobby" />
+        <result column="signature" property="signature" />
+        <result column="color" property="color" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, github_name, nickname, hometown, birthday, constellation, mobile, qq, email, avatar, github_url, hobby, signature, color
+    </sql>
+
+</mapper>

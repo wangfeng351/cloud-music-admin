@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.soft1851.cloud.music.admin.mapper.SignMapper">
+    <select id="selectAll" resultType="map">
+        SELECT t1.status, t2.avatar, t2.name FROM sign_in t1, sys_admin t2
+        WHERE TO_DAYS(t1.create_time) = TO_DAYS(NOW()) AND t1.admin_id = t2.id
+        ORDER BY t2.id
+    </select>
+
+    <select id="getByAdminId" resultType="map">
+        SELECT id FROM sign_in
+        WHERE TO_DAYS(create_time) = TO_DAYS(NOW()) AND admin_id = #{adminId}
+    </select>
+</mapper>

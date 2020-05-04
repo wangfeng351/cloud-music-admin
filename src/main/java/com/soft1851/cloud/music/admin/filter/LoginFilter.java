@@ -55,8 +55,8 @@ public class LoginFilter implements Filter{
                     Part file = request.getPart("file");
                     log.info("文件名：" + file.getName());
                 }else {
-                    String name = request.getHeader("Verify");
-                    log.info(name);
+                    ServletRequest request1 = new RequestWrapper((HttpServletRequest) servletRequest);
+                    filterChain.doFilter(request1, servletResponse);
                 }
             }
         }
