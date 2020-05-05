@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.soft1851.cloud.music.admin.common.ResultCode;
 import com.soft1851.cloud.music.admin.domain.dto.SignDto;
+import com.soft1851.cloud.music.admin.domain.entity.GitHubUser;
+import com.soft1851.cloud.music.admin.domain.entity.RoleAdmin;
 import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
 import com.soft1851.cloud.music.admin.domain.entity.SysRole;
 import com.soft1851.cloud.music.admin.exception.CustomException;
+import com.soft1851.cloud.music.admin.mapper.RoleAdminMapper;
 import com.soft1851.cloud.music.admin.mapper.SysAdminMapper;
 import com.soft1851.cloud.music.admin.mapper.SysRoleMapper;
 import com.soft1851.cloud.music.admin.service.RedisService;
@@ -17,8 +20,10 @@ import com.soft1851.cloud.music.admin.util.JwtTokenUtil;
 import com.soft1851.cloud.music.admin.util.Md5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -36,6 +41,8 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
     private SysAdminMapper sysAdminMapper;
     @Resource
     private SysRoleMapper sysRoleMapper;
+    @Resource
+    private RoleAdminMapper roleAdminMapper;
     @Resource
     private RedisService redisService;
 
@@ -154,5 +161,27 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
             return map;
         }
         throw new CustomException("未查到用户信息", ResultCode.DATA_IS_WRONG);
+    }
+
+    @Override
+    public void signUp(GitHubUser gitHubUser) {
+        if(getAdminByName(gitHubUser.getLogin()) == null) {
+            String id = UUID.randomUUID().toString().replace("-", "");
+            SysAdmin admin = SysAdmin.builder().id(id)
+                    .name(gitHubUser.getLogin())
+                    .avatar(gitHubUser.getAvatar_url())
+                    .password(Md5Util.getMd5("123456", true, 32))
+                    .salt(UUID.randomUUID().toString().replace("-", ""))
+                    .createTime(LocalDateTime.now())
+                    .updateTime(LocalDateTime.now())
+                    .status(1)
+                    .build();
+            RoleAdmin roleAdmin = new RoleAdmin();
+            roleAdmin.setAdminId(id);
+            roleAdmin.setRoleId(2);
+            roleAdmin.setName(gitHubUser.getLogin());
+            sysAdminMapper.insert(admin);
+            roleAdminMapper.insert(roleAdmin);
+        }
     }
 }

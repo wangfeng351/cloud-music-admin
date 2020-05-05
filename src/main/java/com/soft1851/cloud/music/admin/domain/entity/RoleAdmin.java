@@ -44,6 +44,11 @@ public class RoleAdmin extends Model<RoleAdmin> {
     @TableField("role_id")
     private Integer roleId;
 
+    /**
+     * 用户名
+     */
+    @TableField("name")
+    private String name;
 
     @Override
     protected Serializable pkVal() {

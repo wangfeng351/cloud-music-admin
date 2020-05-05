@@ -1,6 +1,7 @@
 package com.soft1851.cloud.music.admin.service;
 
 import com.soft1851.cloud.music.admin.domain.dto.SignDto;
+import com.soft1851.cloud.music.admin.domain.entity.GitHubUser;
 import com.soft1851.cloud.music.admin.domain.entity.SysAdmin;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -66,4 +67,9 @@ public interface SysAdminService extends IService<SysAdmin> {
      * @return
      */
     Map<String, Object> selectAll();
+
+    /**
+     * 注册
+     */
+    void signUp(GitHubUser gitHubUser);
 }
