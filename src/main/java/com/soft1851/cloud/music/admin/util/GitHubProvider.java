@@ -131,7 +131,7 @@ public class GitHubProvider {
         List followingList = getFollowers(following_url, GitHubUser.class);
         List followersList = getFollowers(object.get("followers_url").toString(), GitHubUser.class);
         Map<String, Object> map = new LinkedHashMap<>();
-        System.out.println(gitHubUser);
+        log.info(gitHubUser.toString());
         map.put("user", gitHubUser);
         map.put("followers", followersList);
         map.put("following", followingList);
