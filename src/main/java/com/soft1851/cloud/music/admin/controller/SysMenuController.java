@@ -39,7 +39,7 @@ public class SysMenuController {
     }
 
     @DeleteMapping(value = "/single/{id}")
-    public ResponseResult deleteSingle(@Valid @PathVariable @NotBlank(message = "参数不能为空") int id) {
+    public ResponseResult deleteSingle(@PathVariable int id) {
         sysMenuService.removeById(id);
         return ResponseResult.success();
     }

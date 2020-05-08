@@ -19,7 +19,7 @@ public class TimerTaskServiceImpl implements TimerTaskService {
     private WebSocketProcess webSocketProcess;
 
     @Override
-    @Scheduled(cron = "10 43 20 * * ?")
+    @Scheduled(cron = "00 12 14 * * ?")
 //    @Scheduled(fixedDelay = 2000)
     public void signIn() {
         webSocketProcess.sendAllMessage("signIn");

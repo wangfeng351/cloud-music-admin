@@ -33,4 +33,9 @@ class SignServiceTest {
                 .build();
         signService.update(signIn);
     }
+
+    @Test
+    void getSignInfo() {
+        System.out.println(signService.getSignInfo("DE35D7CC05AF96A21D7ADFC8651E6614"));
+    }
 }

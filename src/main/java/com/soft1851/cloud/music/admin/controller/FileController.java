@@ -52,8 +52,8 @@ public class FileController {
     }
 
     @PostMapping(value = "/upload")
-    public void exportResource(@RequestParam("file") MultipartFile[] files){
-        for (MultipartFile file : files) {
+    public void exportResource(@RequestParam("file") MultipartFile file){
+        /*for (MultipartFile file : files) {
             log.info("文件的响应类型" + file.getContentType());
             log.info("获取表单中文件组件的名字" + file.getName());
             log.info("获取上传文件的名称：" + file.getOriginalFilename());
@@ -70,16 +70,15 @@ public class FileController {
                 file.transferTo(path1);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             /*try {
                 file.transferTo(new File(path));
             } catch (IOException e) {
                 e.printStackTrace();
             }*/
-        }
-        /*log.info(String.valueOf(file.getSize()));
+        /*}*/
         File file1 = FileUtil.fileConversion(file);
-        fileService.importSong(file1);*/
+        fileService.importSong(file1);
     }
 
     @GetMapping(value = "/model")

@@ -52,7 +52,6 @@ public class SysRole extends Model<SysRole> {
      */
     @TableField("descriiption")
     @NotBlank(message = "描述字段不允许为空")
-    @JsonIgnore
     private String descriiption;
 
 

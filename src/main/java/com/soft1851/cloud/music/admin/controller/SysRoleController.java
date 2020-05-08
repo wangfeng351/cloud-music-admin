@@ -49,7 +49,7 @@ public class SysRoleController {
     }
 
     @DeleteMapping(value = "/single/{roleId}")
-    public ResponseResult deleteSingle(@Valid @PathVariable @NotBlank(message = "参数不能为空") int roleId) {
+    public ResponseResult deleteSingle(@PathVariable int roleId) {
         sysRoleService.deleteSingle(roleId);
         return ResponseResult.success();
     }

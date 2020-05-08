@@ -87,11 +87,9 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
     public SysAdmin getAdminByName(String name) {
         QueryWrapper<SysAdmin> wrapper = new QueryWrapper<>();
         wrapper.eq("name", name);
-        SysAdmin sysAdmin = sysAdminMapper.selectOne(wrapper);
-        if (sysAdmin != null) {
-            return sysAdmin;
-        }
-        throw new CustomException("用户不存在", ResultCode.USER_NOT_FOUND);
+        SysAdmin admin = new SysAdmin();
+        admin = sysAdminMapper.selectOne(wrapper);
+        return admin;
     }
 
     @Override
@@ -165,7 +163,11 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
 
     @Override
     public void signUp(GitHubUser gitHubUser) {
-        if(getAdminByName(gitHubUser.getLogin()) == null) {
+        QueryWrapper<SysAdmin> wrapper = new QueryWrapper<>();
+        wrapper.eq("name", gitHubUser.getLogin());
+        log.info("用户查询信息" + sysAdminMapper.selectOne(wrapper));
+        if(sysAdminMapper.selectOne(wrapper) == null){
+            log.info("新增github用户");
             String id = UUID.randomUUID().toString().replace("-", "");
             SysAdmin admin = SysAdmin.builder().id(id)
                     .name(gitHubUser.getLogin())
@@ -180,6 +182,8 @@ public class SysAdminServiceImpl extends ServiceImpl<SysAdminMapper, SysAdmin> i
             roleAdmin.setAdminId(id);
             roleAdmin.setRoleId(2);
             roleAdmin.setName(gitHubUser.getLogin());
+            log.info("用户信息：" + admin.toString());
+            log.info("用户角色信息：" + roleAdmin.toString());
             sysAdminMapper.insert(admin);
             roleAdminMapper.insert(roleAdmin);
         }

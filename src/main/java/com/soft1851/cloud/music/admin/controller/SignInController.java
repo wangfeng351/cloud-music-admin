@@ -3,6 +3,7 @@ package com.soft1851.cloud.music.admin.controller;
 import com.soft1851.cloud.music.admin.common.ResponseResult;
 import com.soft1851.cloud.music.admin.domain.entity.SignIn;
 import com.soft1851.cloud.music.admin.service.SignService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,5 +31,10 @@ public class SignInController {
     @GetMapping(value = "/list")
     public List<Map<String, Object>> selectAll() {
         return signService.selectAll();
+    }
+
+    @GetMapping(value = "/single")
+    public Map<String, String> getSignInfo(@Param("adminId") String adminId) {
+        return signService.getSignInfo(adminId);
     }
 }

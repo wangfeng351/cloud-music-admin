@@ -24,4 +24,10 @@ public interface SignService {
      * @param signIn
      */
     void update(SignIn signIn);
+
+    /**
+     * 获取某人签到信息
+     * @return
+     */
+    Map<String, String> getSignInfo(String adminId);
 }

@@ -61,7 +61,7 @@ public class SongListServiceImpl extends ServiceImpl<SongListMapper, SongList> i
                 QueryWrapper<SongList> wrapper1 = new QueryWrapper<>();
                 //根据父类的type类型查询属于该类型的数据
                 wrapper1.orderByDesc("plays_counts").eq("type", map.get("type"));
-                List<Map<String, Object>> songLists = songListMapper.selectMaps(wrapper1);
+                List<SongList> songLists = songListMapper.selectList(wrapper1);
                 map.put("child", songLists);
             }
         }

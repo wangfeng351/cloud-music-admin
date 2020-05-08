@@ -49,7 +49,6 @@ public class SongList extends Model<SongList> {
     /**
      * 封面
      */
-    @JsonIgnore
     private String thumbnail;
 
     /**
